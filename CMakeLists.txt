@@ -17,3 +17,9 @@ add_executable (Main
 )
 
 target_link_libraries(Main Serializer)
+
+enable_testing()
+
+# Собираем тесты
+add_subdirectory(tests)
+
