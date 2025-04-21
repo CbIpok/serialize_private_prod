@@ -1,15 +1,11 @@
-project(MyTests LANGUAGES CXX)
+include(../cmake/GoogleTest.cmake)
+include(../cmake/Nlohmann.cmake)
 
-# Где искать заголовки вашей библиотеки
-# (тут уже автоматически добавится include из mylib через PUBLIC)
-# Но если нужно явно:
+enable_testing()
+include(GoogleTest)
+
 # include_directories(${CMAKE_SOURCE_DIR}/lib/include)
 set(CMAKE_CXX_STANDARD 17)
-# If not using integrate install, uncomment and set your path:
-# set(CMAKE_TOOLCHAIN_FILE "/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-
-# Grab the GTest targets
-find_package(GTest CONFIG REQUIRED)
 
 add_custom_command(
     OUTPUT raw_tests
@@ -18,24 +14,13 @@ add_custom_command(
 )
 
 
-# Собираем исполняемый файл с тестами
-add_executable(test_foo
-    raw_tests
-    test_main.cpp
+add_executable(test_foo raw_tests test_main.cpp)
+
+target_link_libraries(test_foo PRIVATE Serializer GTest::gtest_main GTest::gtest GTest::gtest_main nlohmann_json::nlohmann_json)
+target_include_directories(
+        Serializer ${warning_guard}
+        PUBLIC
+        "\$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/serializator>"
 )
 
-# Линкуем с вашей библиотекой
-target_link_libraries(test_foo
-    PRIVATE
-      Serializer
-      GTest::gtest_main
-)
-
-include_directories(${CMAKE_SOURCE_DIR}/serializator)
-target_include_directories(test_foo
-    PRIVATE
-      ${CMAKE_CURRENT_SOURCE_DIR} 
-)
-
-
-
+gtest_discover_tests(test_foo)
