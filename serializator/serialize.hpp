@@ -65,7 +65,7 @@ namespace detail {
 template<typename Derived, typename ValueT, TypeId KTypeId>
 class BaseType {
 public:
-    explicit BaseType(ValueT v)
+    BaseType(ValueT v)
         : value_(std::move(v))
     {
     }

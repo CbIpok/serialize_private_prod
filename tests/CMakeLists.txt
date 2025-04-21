@@ -11,8 +11,16 @@ set(CMAKE_CXX_STANDARD 17)
 # Grab the GTest targets
 find_package(GTest CONFIG REQUIRED)
 
+add_custom_command(
+    OUTPUT raw_tests
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/raw.bin ${CMAKE_CURRENT_BINARY_DIR}/raw.bin
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/raw.json ${CMAKE_CURRENT_BINARY_DIR}/raw.json
+)
+
+
 # Собираем исполняемый файл с тестами
 add_executable(test_foo
+    raw_tests
     test_main.cpp
 )
 

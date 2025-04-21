@@ -8,6 +8,36 @@
 using json = nlohmann::json;
 using Buffer = std::vector<std::byte>;
 
+void init_test() {
+  
+    IntegerType i1{ 42 };
+    IntegerType i2 = 99ULL;
+
+
+    FloatType f1{ 3.1415 };
+    FloatType f2 = 2.71828;
+
+
+    StringType s1{ "hello" };
+    std::string tmp = "world";
+    StringType s2 = tmp;
+
+
+    VectorType v1{ IntegerType{1}, FloatType{2.0}, StringType{"foo"}, VectorType{} };
+
+    VectorType v2( i1, f1, s1, v1 );
+
+    VectorType v3;
+    v3.push_back(IntegerType{ 3 });
+    v3.push_back(f2);
+    v3.push_back(s2);
+    v3.push_back(v2);
+
+ 
+    VectorType v4{ v1, VectorType{ i2, FloatType{4.5} } };
+}
+
+
 // Helper: deserialize raw.bin into a vector<Any>
 static std::vector<Any> loadRawAny(const std::string& path) {
     std::ifstream raw(path, std::ios::binary);
@@ -80,7 +110,7 @@ static std::vector<Any> loadJsonAny(const std::string& path) {
 
 TEST(Serializator, RawBinMatchesOutputJson) {
     auto rawVec = loadRawAny("raw.bin");
-    auto jsonVec = loadJsonAny("output.json");
+    auto jsonVec = loadJsonAny("raw.json");
 
     // 1) First ensure they have the same length
     ASSERT_EQ(rawVec.size(), jsonVec.size())
