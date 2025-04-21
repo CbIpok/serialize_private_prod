@@ -4,8 +4,13 @@ project ("TestTaskIniti")
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
-set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -O3 -Wall -Wextra -Wpedantic -Werror ")
+if (MSVC)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+else()
+    # GCC/Clang: enable ASAN in debug
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -g -fsanitize=address")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -O3 -Wall -Wextra -Wpedantic -Werror")
+endif()
 
 add_custom_command(
     OUTPUT raw
