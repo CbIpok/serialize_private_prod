@@ -173,8 +173,7 @@ public:
         std::is_same<std::decay_t<T>, IntegerType>,
         std::is_same<std::decay_t<T>, FloatType>,
         std::is_same<std::decay_t<T>, StringType>,
-        std::is_same<std::decay_t<T>, VectorType>,
-        std::is_same<std::decay_t<T>, Any>
+        std::is_same<std::decay_t<T>, VectorType>
         >
         >
     >
@@ -213,7 +212,7 @@ public:
         if constexpr (kId == TypeId::Uint)    return getValue<IntegerType>();
         else if constexpr (kId == TypeId::Float)  return getValue<FloatType>();
         else if constexpr (kId == TypeId::String) return getValue<StringType>();
-        else /* kId == TypeId::Vector */         return getValue<VectorType>(); //todo fix
+        else if constexpr (kId == TypeId::Vector) return getValue<VectorType>(); //todo fix
     }
 
     bool operator==(Any const& o) const {
