@@ -30,8 +30,4 @@ target_include_directories(test_foo
 )
 
 
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/output.json
-  ${CMAKE_CURRENT_BINARY_DIR}/output.json
-  COPYONLY
-)
+

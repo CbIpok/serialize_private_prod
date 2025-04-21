@@ -24,9 +24,19 @@ static std::vector<Any> loadRawAny(const std::string& path) {
     return Serializator::deserialize(buff);
 }
 
+static std::string hex_to_bytes(const std::string& hex) {
+    std::string out;
+    out.reserve(hex.size() / 2);
+    for (size_t i = 0; i < hex.size(); i += 2) {
+        uint8_t byte = std::stoul(hex.substr(i, 2), nullptr, 16);
+        out.push_back(static_cast<char>(byte));
+    }
+    return out;
+}
+
 // Helper: parse output.json into a vector<Any>
 static std::vector<Any> loadJsonAny(const std::string& path) {
-    std::ifstream in(path);
+    std::ifstream in(path, std::ios::binary);
     EXPECT_TRUE(in.is_open()) << "Cannot open " << path;
 
     json j;
@@ -46,7 +56,10 @@ static std::vector<Any> loadJsonAny(const std::string& path) {
             return Any{ FloatType{ elem.get<double>() } };
         }
         if (elem.is_string()) {
-            return Any{ StringType{ elem.get<std::string>() } };
+            // hex‑encoded raw blob → decode back to bytes
+            auto hex = elem.get<std::string>();
+            auto raw = hex_to_bytes(hex);
+            return Any{ StringType{ std::move(raw) } };
         }
         if (elem.is_array()) {
             VectorType vec;

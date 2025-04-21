@@ -4,11 +4,11 @@
 
 Buffer::const_iterator Any::deserialize(Buffer::const_iterator it,
     Buffer::const_iterator end) {
-    // Сначала читаем Id типа
+
     Id rawId = detail::readPrimitive<Id>(it, end);
     auto tid = static_cast<TypeId>(rawId);
 
-    // В зависимости от tid десериализуем нужный XType и сохраняем в payload_
+
     switch (tid) {
     case TypeId::Uint: {
         auto v = IntegerType::deserialize(it, end);
@@ -31,7 +31,7 @@ Buffer::const_iterator Any::deserialize(Buffer::const_iterator it,
         break;
     }
     }
-    // Возвращаем итератор, указывающий на следующий неподсчитанный байт
+
     return it;
 }
 
