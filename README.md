@@ -1,3 +1,5 @@
+# Тестовое задание Serializator
+
 ## 1. Запуск
 
 **Windows (Visual Studio + MSVC)**  
@@ -20,7 +22,7 @@ make
 /
 ├── serializator/      — библиотека Serializer (хедеры + реализация)
 ├── tests/             — юнит‑тесты на GoogleTest
-├── decoder/           — example-приложение
+├── decoder/           — example‑приложение
 ├── raw.bin, raw.json  — тестовые данные
 └── CMakeLists.txt     — корневые настройки сборки
 ```
@@ -63,3 +65,4 @@ int main() {
 
 *Регламентированный main:*  
 - Регламентированный main завершается с выводом "1" в stdout.
+
