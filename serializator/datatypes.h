@@ -25,11 +25,14 @@ public:
         return Derived{ std::move(val) };
     }
 
+
+    void serialize(Buffer& buff) const { serialize_impl(buff); }
+
     bool operator==(Derived const& other) const {
         return value_ == other.value_;
     }
 
-protected:
+private:
     void serialize_impl(Buffer& buff) const {
         detail::writePrimitive<Id>(buff, static_cast<Id>(KTypeId));
         detail::writePrimitive<ValueT>(buff, value_);
@@ -40,20 +43,11 @@ protected:
 };
 
 
-class IntegerType final: public BaseType<IntegerType, std::uint64_t, TypeId::Uint> {
-public:
-    using BaseType::BaseType;
-
-    void serialize(Buffer& buff) const { serialize_impl(buff); }
-};
+class IntegerType : public  BaseType<IntegerType, std::uint64_t, TypeId::Uint> {};
 
 
-class FloatType final: public BaseType<FloatType, double, TypeId::Float> {
-public:
-    using BaseType::BaseType;
+class FloatType : public BaseType<FloatType, double, TypeId::Float> {};
 
-    void serialize(Buffer& buff) const { serialize_impl(buff); }
-};
 
 class StringType final : public BaseType<StringType, std::string, TypeId::String> {
 public:

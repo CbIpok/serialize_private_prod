@@ -19,7 +19,7 @@ namespace detail {
 	}
 
 	template<typename T>
-	T readPrimitive(Buffer::const_iterator& it, Buffer::const_iterator) {
+	T readPrimitive(Buffer::const_iterator& it, Buffer::const_iterator end) {
 		T v;
 		// copy sizeof(T) bytes from the byte‐buffer into v
 		std::memcpy(
