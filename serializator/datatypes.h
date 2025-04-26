@@ -17,7 +17,11 @@ public:
 
 public:
     BaseType() = default;
-    BaseType(ValueT v): value_(std::move(v)) {}
+    template<typename... Args,
+        typename = std::enable_if_t<std::is_constructible_v<ValueT, Args...>>>
+    BaseType(Args&&... args)
+        : value_(std::forward<Args>(args)...) {
+    }
 
     [[nodiscard]]
     static Derived deserialize(Buffer::const_iterator& it, Buffer::const_iterator end) {
@@ -62,12 +66,10 @@ public:
 
     static StringType deserialize(Buffer::const_iterator& it, Buffer::const_iterator end) {
         auto len = detail::readPrimitive<uint64_t>(it, end);
-        std::string s;
-        s.resize(len);
-        for (uint64_t i = 0; i < len; ++i) {
-            s[i] = static_cast<char>(*it++);
-        }
-        return StringType{ std::move(s) };
+        detail::is_available(it, end, len);
+        StringType val = StringType(reinterpret_cast<const char*>(&*it), len);
+        it += len;
+        return val;
     }
 };
 
@@ -130,7 +132,7 @@ public:
         if constexpr (kId == TypeId::Uint)    return getValue<IntegerType>();
         else if constexpr (kId == TypeId::Float)  return getValue<FloatType>();
         else if constexpr (kId == TypeId::String) return getValue<StringType>();
-        else if constexpr (kId == TypeId::Vector) return getValue<VectorType>(); //todo fix
+        else if constexpr (kId == TypeId::Vector) return getValue<VectorType>(); 
     }
 
     bool operator==(Any const& o) const {
